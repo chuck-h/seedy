@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>
+function getUSD2Seeds() {
+  return 13.3871;
+}
+function getUSDPrice() {
+  var priceInUSD;
+  return priceInISD;
+}
+</script>
+</head>
+<body>
+
+
+<h2>Check out in Seeds</h2>
+
+<p id="dpriceline"> Price </p>
+<p id="demo">JavaScript can change HTML content.</p>
+
+<script>
+var priceInUSD = 10.00;
+document.getElementById("dpriceline").innerHTML = "Price $"+priceInUSD;
+document.getElementById("demo").innerHTML = getUSD2Seeds()*priceInUSD+" SEEDS";
+</script>
+
+
+<button type="button" id="demonic"
+ onclick='document.getElementById("demonic").innerHTML = getUSD2Seeds()'>Click Me!</button>
+
+</body>
+</html>

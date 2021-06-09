@@ -2,32 +2,69 @@
 <html>
 <head>
 <script>
-function getUSD2Seeds() {
-  return 13.3871;
+var eosHost = 'https://api.eos.miami';
+//var eosHost = 'https://node.hypha.earth';
+async function postData(url = '', data = {}) {
+  const response = await fetch(url, {
+    method: 'POST', 
+    mode: 'cors',
+    cache: 'no-cache',
+    redirect: 'follow',
+    referrerPolicy: 'no-referrer',
+    body: JSON.stringify(data)
+  });
+  return response.json(); // parses JSON response into native JavaScript objects
 }
-function getUSDPrice() {
-  var priceInUSD;
-  return priceInISD;
+
+function seedsPerUSD(callback) {
+  postData(eosHost+'/v1/chain/get_table_rows',
+    { 'code': 'tlosto.seeds',
+      'scope': 'tlosto.seeds',
+      'table': 'price',
+      'json': true
+    })
+    .then(data => {
+      callback(parseFloat(data['rows'][0]['current_seeds_per_usd']));
+    });
+}
+var basePriceUSD
+function setBasePriceUSD(p) {
+  basePriceUSD = p;
+}
+
+var calcPriceSeeds
+function updatePricing(seedsPrice) {
+  calcPriceSeeds =
+      seedsPrice*basePriceUSD;
+  var calcPriceUSD = basePriceUSD;
+  document.getElementById("priceline").innerHTML =
+     "Price: $"+calcPriceUSD.toFixed(2)
+      +" or "+calcPriceSeeds.toFixed(1)+" Seeds";
+}
+
+function buyWithSeeds(seeds) {
+  alert("You are trying to send "+seeds+ " Seeds to someone,\n"+
+        "but we don't know how yet." )
 }
 </script>
 </head>
+
 <body>
+<h2>Check out</h2>
 
-
-<h2>Check out in Seeds</h2>
-
-<p id="dpriceline"> Price </p>
-<p id="demo">JavaScript can change HTML content.</p>
+<p id="priceline"> Price </p>
 
 <script>
-var priceInUSD = 10.00;
-document.getElementById("dpriceline").innerHTML = "Price $"+priceInUSD;
-document.getElementById("demo").innerHTML = getUSD2Seeds()*priceInUSD+" SEEDS";
+setBasePriceUSD(10.00);
+seedsPerUSD(updatePricing);
 </script>
 
 
-<button type="button" id="demonic"
- onclick='document.getElementById("demonic").innerHTML = getUSD2Seeds()'>Click Me!</button>
+<button type="button" 
+ onclick='seedsPerUSD(updatePricing)'>Update conversion</button>
+
+<button type="button" 
+ onclick='buyWithSeeds(calcPriceSeeds)'>Buy with Seeds</button>
 
 </body>
 </html>
